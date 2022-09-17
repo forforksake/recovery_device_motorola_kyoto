@@ -111,6 +111,5 @@ on boot
     insmod /vendor/lib/modules/sensors_class.ko
 
       # Access permission for led torch
-    chmod 0666 /sys/class/flashlight/mt-flash-led1
-    chmod 0666 /sys/class/flashlight/
-    chmod 0666 /sys/class/leds/led:switch/brightness
+	chown system system /sys/class/flashlight_core/flashlight/flashlight_strobe
+    chmod 0646 /sys/class/flashlight_core/flashlight/flashlight_strobe

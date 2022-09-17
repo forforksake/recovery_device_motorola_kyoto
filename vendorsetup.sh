@@ -41,12 +41,10 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 	# Magisk
-	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/forforksake/fox_11.0/magisk/magisk.zip"
-
+	export FOX_USE_SPECIFIC_MAGISK_ZIP="$PWD/device/magisk.zip"
 	# flashlight
 	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1=sys/class/flashlight/mt-flash-led1
-	export OF_FL_PATH2=sys/class/flashlight/mt-flash-led2
+	export OF_FL_PATH1="/sys/class/flashlight_core/flashlight/flashlight_strobe"
 
 	export OF_PATCH_VBMETA_FLAG=0
     export OF_AB_DEVICE=1
@@ -65,7 +63,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_NANO_EDITOR=1
 	export OF_ENABLE_LPTOOLS=1
 	export OF_QUICK_BACKUP_LIST="/boot;/metadata;"
-	export OF_MAINTAINER_AVATAR="/home/forforksake/maintainer.png"
+	export OF_MAINTAINER_AVATAR="$PWD/device/motorola/kyoto/recovery/root/foxfiles/maintainer.png"
 	export OF_PATCH_AVB20=1
 	export FOX_DELETE_AROMAFM=1
 	export FOX_ENABLE_APP_MANAGER=1
@@ -77,7 +75,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
 	# Screen Settings
 	export OF_SCREEN_H=2400
-	export OF_STATUS_H=80
+	export OF_STATUS_H=90
 	export OF_STATUS_INDENT_LEFT=48
 	export OF_STATUS_INDENT_RIGHT=48
 	export OF_CLOCK_POS=1
