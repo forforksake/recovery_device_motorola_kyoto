@@ -1,0 +1,116 @@
+import /tee.rc
+import /trustonic.rc
+
+on init
+    wait /dev/block/platform/bootdevice
+    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
+    export LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64:/system/lib64/hw:/sbin
+
+on fs
+    setprop crypto.ready 1
+
+service vendor.boot-hal-1-1 /vendor/bin/hw/android.hardware.boot@1.1-service
+    interface android.hardware.boot@1.0::IBootControl default
+    interface android.hardware.boot@1.1::IBootControl default
+    class early_hal
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-service.trustonic
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    interface android.hardware.keymaster@4.1::IKeymasterDevice default
+    user root
+    group root drmrpc
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service keystore_auth /system/bin/keystore_auth
+    user system
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service keystore /system/bin/keystore /data/misc/keystore
+    user root
+    group root drmrpc readproc log
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw:/sbin
+    seclabel u:r:recovery:s0
+
+service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
+    class late_start
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+on fs && property:ro.debuggable=0
+    # distinguish USB shoulde connect or not, i.e. CDP vs SDP
+    write /sys/class/udc/musb-hdrc/device/cmode 2
+    # set charging free due to it wait for USB activation
+    start adbd
+
+on post-fs
+    # Support A/B feature for EMMC and UFS boot region
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+    symlink /dev/block/mmcblk0boot0 /dev/block/platform/bootdevice/by-name/preloader_a
+    symlink /dev/block/mmcblk0boot1 /dev/block/platform/bootdevice/by-name/preloader_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_ufs_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_ufs_b
+
+on post-fs-data
+    chown system system /data
+    chmod 0771 /data
+    restorecon /data
+    mkdir /data/vendor 0771 root root encryption=Require
+    mkdir /data/vendor_ce 0771 root root encryption=None
+    mkdir /data/vendor_de 0771 root root encryption=None
+    # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
+    # Key Installation
+    mkdir /data/vendor/key_provisioning 0771 system system
+    installkey /data
+    install_keyring
+
+on property:hwservicemanager.ready=true && property:crypto.ready=1
+    start mobicore
+    start gatekeeperd
+    start vendor.gatekeeper-1-0
+    start keymaster-4-1-trustonic
+
+on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
+    setprop crypto.ready 0
+    stop mobicore
+    stop gatekeeperd
+    stop vendor.gatekeeper-1-0
+    stop keymaster-4-1-trustonic
+
+# health hal and final chance to load touchscreen drivers
+on boot
+    start health-hal-2-1
+    start vendor.boot-hal-1-1
+    insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
+    insmod /vendor/lib/modules/mtk_tpd_mmi.ko
+    insmod /vendor/lib/modules/sensors_class.ko
+
+      # Access permission for led torch
+    chmod 0666 /sys/class/flashlight/mt-flash-led1
+    chmod 0666 /sys/class/flashlight/
+    chmod 0666 /sys/class/leds/led:switch/brightness

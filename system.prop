@@ -1,0 +1,13 @@
+
+#
+# DEVICE PROPS
+#
+ro.display.series="motorola edge 20 lite"
+ro.adb.secure=0
+ro.secure=0
+ro.debuggable=1
+ro.boot.dynamic_partitions=true
+ro.crypto.uses_fs_ioc_add_encryption_key=true
+ro.hardware.kmsetkey=trustonic
+ro.crypto.volume.filenames_mode=aes-256-cts
+ro.boot.boot_devices=bootdevice,soc/11230000.mmc,11230000.mmc,soc/11270000.ufshci,11270000.ufshci

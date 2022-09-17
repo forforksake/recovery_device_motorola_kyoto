@@ -1,0 +1,30 @@
+#logical
+/system_ext			ext4		/system_ext						 						flags=display="System_ext";logical
+/vendor		       	ext4		/vendor							 					flags=display="Vendor";logical
+/product			ext4		/product					  							flags=display="Product";logical
+/system     		ext4		/system							 				flags=display="System";logical
+
+# Physical partitions
+/metadata	          	ext4	   	/dev/block/platform/bootdevice/by-name/metadata	 	 		flags=backup=1;display="Metadata";wipeduringfactoryreset;formattable;wipeingui;
+/data		           	f2fs	      /dev/block/platform/bootdevice/by-name/userdata		 		flags=display="Data";fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption
+/boot	      	     	emmc     	/dev/block/platform/bootdevice/by-name/boot            	flags=backup=1;flashimg;slotselect;display="Boot"
+/cache                 	emmc     	/dev/block/platform/bootdevice/by-name/cache	       	flags=backup=1;display="Cache"
+/dtbo		       	    emmc	   	/dev/block/platform/bootdevice/by-name/dtbo			       flags=backup=1;flashimg;display="Dtbo"
+/nvcgfg			        ext4		/dev/block/platform/bootdevice/by-name/nvcfg			flags=display="Nvcfg";
+/nvdata		            ext4 		/dev/block/platform/bootdevice/by-name/nvdata			flags=display="Nvdata";wipeduringfactoryreset;formattable;wipeingui
+/tee1               	emmc 		/dev/block/platform/bootdevice/by-name/tee_a
+/tee2                 	emmc   	    /dev/block/platform/bootdevice/by-name/tee_b
+/persist		        ext4		/dev/block/platform/bootdevice/by-name/persist			flags=display="Persist";backup=1;mounttodecrypt
+/prodpersist	 	    ext4	  	/dev/block/platform/bootdevice/by-name/prodpersist	  	flags=display="ProdPersist";backup=1
+/tzapp			        ext4	 	/dev/block/platform/bootdevice/by-name/tzapp_a
+/persistent		 	    emmc	  	/dev/block/platform/bootdevice/by-name/frp		 	   flags=display="Persistent";backup=1
+/boot_para         	    emmc     	/dev/block/platform/bootdevice/by-name/boot_para         flags=display="Boot_para";backup=1
+/odmdtbo           	    emmc     	/dev/block/platform/bootdevice/by-name/odmdtbo           flags=display="Odmdtbo";backup=1
+/otp		       	    emmc     	/dev/block/platform/bootdevice/by-name/otp	  	        flags=display="otp";backup=1
+/misc       	    	emmc     	/dev/block/platform/bootdevice/by-name/misc 		   flags=display="misc";backup=1
+/vendor_boot	 	     emmc		/dev/block/platform/bootdevice/by-name/vendor_boot	   flags=display="Vendor Boot";backup=1;slotselect;flashimg=1
+
+# Removable storage
+/external_sd  	 vfat	    /dev/block/mmcblk0p1	/dev/block/mmcblk0		 		flags=storage;wipeingui;removable
+/usb-otg	   	 vfat	   /dev/block/sdd1  		/dev/block/sdd   			 		flags=display="USB Storage";storage;wipeingui;removable
+

@@ -1,0 +1,84 @@
+on init
+    # Create the mountpoint for mnt/vendor partitions
+    mkdir /mnt/vendor/persist 0771 root root
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
+    mkdir /data/misc 0771 root root
+    restorecon_recursive /data/misc
+    mkdir /data/misc/keystore 0771 root root
+    restorecon_recursive /data/misc/keystore
+    mkdir /data/misc/gatekeeper 0771 system system
+    restorecon_recursive /data/misc/gatekeeper
+    mkdir /mnt/vendor/protect_f 0770 root root
+    mkdir /mnt/vendor/protect_s 0770 root root
+    mkdir /mnt/vendor/nvcfg 0771 root root
+    mkdir /mnt/vendor/nvdata 0771 root root
+
+on post-fs    
+    chown system system /mnt/vendor/protect_f
+    chmod 0770 /mnt/vendor/protect_f
+    restorecon /mnt/vendor/protect_f
+    mount ext4 /dev/block/by-name/protect_f /mnt/vendor/protect_f rw
+
+    chown system system /mnt/vendor/protect_s
+    chmod 0770 /mnt/vendor/protect_s
+    restorecon /mnt/vendor/protect_s
+    mount ext4 /dev/block/by-name/protect_s /mnt/vendor/protect_s rw
+
+    chown system system /mnt/vendor/nvcfg
+    chmod 0771 /mnt/vendor/nvcfg
+    restorecon /mnt/vendor/nvcfg
+    mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg rw
+    restorecon_recursive /mnt/vendor/nvcfg
+
+    chown system system /mnt/vendor/persist
+    #We restorecon /mnt/vendor/persist to set SEPolicy label.
+    restorecon /mnt/vendor/persist
+
+    mkdir /mnt/vendor/persist/rpmb
+    chown system system /mnt/vendor/persist/rpmb
+    chmod 0771 /mnt/vendor/persist/rpmb
+    restorecon_recursive /mnt/vendor/persist/rpmb
+
+    # Set other rpmb
+    mkdir /persist/rpmb
+    mkdir /vendor/persist/rpmb
+    chmod 0771 /persist/rpmb
+    chmod 0771 /vendor/persist/rpmb
+    chown system system /persist/rpmb
+    chown system system /vendor/persist/rpmb
+    restorecon_recursive /persist
+    restorecon_recursive /vendor/persist
+
+    chown root system /mnt/vendor/nvdata
+    chmod 0771 /mnt/vendor/nvdata
+    restorecon /mnt/vendor/nvdata
+    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw
+    mkdir /mnt/vendor/nvdata/media 0771 media audio
+    restorecon_recursive /mnt/vendor/nvdata
+
+    # Create mcRegistry to store failure record
+    mkdir /mnt/vendor/persist/mcRegistry 0771 system system
+
+    # Override the mobicore token path and rebel it with proper contexts
+    mkdir /mnt/vendor/persist/mobicore 0770 system system
+    restorecon /mnt/vendor/persist/mobicore
+    write /proc/bootprof "MOBICORE: Starting mcDriverDaemon"
+    start mobicore
+
+# For META/FACTORY mode
+on property:ro.crypto.state=unencrypted
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (unencrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (unencrypted)"
+
+# Normal mode, FBE
+on property:ro.crypto.type=file && property:ro.crypto.state=encrypted
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (FBE encrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (FBE encrypted)"
+
+# Normal mode, FDE
+on property:vold.decrypt=trigger_restart_framework
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (FDE encrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (FDE encrypted)"
