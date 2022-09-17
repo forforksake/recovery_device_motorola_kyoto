@@ -39,21 +39,32 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export LC_ALL="C"
 	export ALLOW_MISSING_DEPENDENCIES=true
 
+	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
-	# Magisk
+
+	# Magisk Canary
 	export FOX_USE_SPECIFIC_MAGISK_ZIP="$PWD/device/magisk.zip"
+
 	# flashlight
 	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/sys/class/flashlight_core/flashlight/flashlight_strobe"
-
-	export OF_PATCH_VBMETA_FLAG=0
-    export OF_AB_DEVICE=1
+	export OF_FL_PATH1="/sys/class/leds/led:torch_0"
 	export OF_USE_GREEN_LED=0
-	export OF_HIDE_NOTCH=1
+
+	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
+	export OF_PATCH_VBMETA_FLAG=0
+	export OF_PATCH_AVB20=1
+
+	# AB
+    export OF_AB_DEVICE=1
 	export OF_USE_TWRP_SAR_DETECT
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
+
+	#Metadata restore resolves alot of bootloops
+	export OF_QUICK_BACKUP_LIST="/boot;/metadata;"
+
+	# tools
 	export FOX_USE_BASH_SHELL=1
 	export FOX_ASH_IS_BASH=1
 	export FOX_USE_TAR_BINARY=1
@@ -62,26 +73,25 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_REPLACE_TOOLBOX_GETPROP=1
 	export FOX_USE_NANO_EDITOR=1
 	export OF_ENABLE_LPTOOLS=1
-	export OF_QUICK_BACKUP_LIST="/boot;/metadata;"
-	export OF_MAINTAINER_AVATAR="$PWD/device/motorola/kyoto/recovery/root/foxfiles/maintainer.png"
-	export OF_PATCH_AVB20=1
-	export FOX_DELETE_AROMAFM=1
 	export FOX_ENABLE_APP_MANAGER=1
+	export FOX_DELETE_AROMAFM=1
 
-	# R11.1 Settings
+	# R11.1 Version and Maintainer
 	export FOX_VERSION=$(date +%d.%m.%y)
 	export FOX_BUILD_TYPE="Beta"
 	export OF_MAINTAINER="C F K O D @ X D A"
+	export OF_MAINTAINER_AVATAR="$PWD/device/motorola/kyoto/recovery/root/FFiles/maintainer.png"
 
-	# Screen Settings
+	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400
 	export OF_STATUS_H=90
 	export OF_STATUS_INDENT_LEFT=48
 	export OF_STATUS_INDENT_RIGHT=48
 	export OF_CLOCK_POS=1
 	export OF_ALLOW_DISABLE_NAVBAR=0
+	export OF_HIDE_NOTCH=1
 
-	# let's see what are our build VARs
+	# build vars
 	if [ -n "$FOX_BUILD_LOG_FILE" -a -f "$FOX_BUILD_LOG_FILE" ]; then
 		export | grep "FOX" >> $FOX_BUILD_LOG_FILE
 		export | grep "OF_" >> $FOX_BUILD_LOG_FILE

@@ -8,6 +8,9 @@ on init
     restorecon_recursive /data/misc/keystore
     mkdir /data/misc/gatekeeper 0771 system system
     restorecon_recursive /data/misc/gatekeeper
+    chown system system /system/etc
+    chmod 0666 /system/etc
+    symlink /system/etc /etc
     mkdir /mnt/vendor/protect_f 0770 root root
     mkdir /mnt/vendor/protect_s 0770 root root
     mkdir /mnt/vendor/nvcfg 0771 root root
