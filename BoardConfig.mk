@@ -159,12 +159,9 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 # Touchscreen Modules
 TW_LOAD_VENDOR_MODULES := "focaltech_mtk_mmi.ko mtk_tpd_mmi.ko sensors_class.ko"
 
-#sytem/bin
-TW_RECOVERY_ADDITIONAL_RELINK_BINARY_FILES += \
-    $(TARGET_RECOVERY_ROOT_OUT)/system/bin/android.hardware.keymaster@4.1-service.trustonic
-
 TW_RECOVERY_ADDITIONAL_RELINK_VENDOR_HW_BINARY_FILES += \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.gatekeeper@1.0-service \
+    $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
 
 #Libs from System & Vendor related to the Binaries  above3
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \

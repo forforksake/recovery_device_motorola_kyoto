@@ -9,16 +9,17 @@ on init
 on fs
     setprop crypto.ready 1
 
-service vendor.boot-hal-1-1 /vendor/bin/hw/android.hardware.boot@1.1-service
+service boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
     interface android.hardware.boot@1.0::IBootControl default
     interface android.hardware.boot@1.1::IBootControl default
+    interface android.hardware.boot@1.2::IBootControl default
     class early_hal
     user root
     group root
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-service.trustonic
+service keymaster-4-1-trustonic /vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
     interface android.hardware.keymaster@4.0::IKeymasterDevice default
     interface android.hardware.keymaster@4.1::IKeymasterDevice default
     user root
@@ -26,29 +27,18 @@ service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-servi
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
     user root
     group root
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service keystore_auth /system/bin/keystore_auth
-    user system
-    group root
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
-    seclabel u:r:recovery:s0
-
-service keystore /system/bin/keystore /data/misc/keystore
+service keystore2 /system/bin/keystore2 /data/misc/keystore
+    class early_hal
     user root
-    group root drmrpc readproc log
+    group root readproc log
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw:/sbin
-    seclabel u:r:recovery:s0
-
-service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
-    class late_start
-    user root
-    group root
     seclabel u:r:recovery:s0
 
 on fs && property:ro.debuggable=0
@@ -79,6 +69,12 @@ on post-fs
 
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
 
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+
+
 on post-fs-data
     chown system system /data
     chmod 0771 /data
@@ -94,21 +90,19 @@ on post-fs-data
 
 on property:hwservicemanager.ready=true && property:crypto.ready=1
     start mobicore
-    start gatekeeperd
-    start vendor.gatekeeper-1-0
+    start gatekeeper-1-0
     start keymaster-4-1-trustonic
 
 on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
     setprop crypto.ready 0
     stop mobicore
-    stop gatekeeperd
-    stop vendor.gatekeeper-1-0
+    stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
 
 # health hal and final chance to load touchscreen drivers
 on boot
     start health-hal-2-1
-    start vendor.boot-hal-1-1
+    start boot-hal-1-2
     insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
     insmod /vendor/lib/modules/mtk_tpd_mmi.ko
     insmod /vendor/lib/modules/sensors_class.ko

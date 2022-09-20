@@ -47,7 +47,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
 	# flashlight
 	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/sys/class/leds/led:torch_0"
+	export OF_FL_PATH1="/sys/class/leds/mt6360_pmu_led3"
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
@@ -80,7 +80,6 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_VERSION=$(date +%d.%m.%y)
 	export FOX_BUILD_TYPE="Beta"
 	export OF_MAINTAINER="C F K O D @ X D A"
-	export OF_MAINTAINER_AVATAR="$PWD/device/motorola/kyoto/recovery/root/FFiles/maintainer.png"
 
 	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400
