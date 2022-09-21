@@ -42,12 +42,10 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 
-	# Magisk Canary
-	export FOX_USE_SPECIFIC_MAGISK_ZIP="$PWD/device/magisk.zip"
-
 	# flashlight
 	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/sys/class/leds/led:torch_0"
+	export OF_FL_PATH1="/sys/class/flashlight/mt-flash-led1/mode"
+	export OF_FL_PATH2="/sys/class/flashlight/mt-flash-led1/torch_brightness"
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
@@ -55,7 +53,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export OF_PATCH_AVB20=1
 
 	# AB
-    export OF_AB_DEVICE=1
+   	 export OF_AB_DEVICE=1
 	export OF_USE_TWRP_SAR_DETECT
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
@@ -80,7 +78,6 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_VERSION=$(date +%d.%m.%y)
 	export FOX_BUILD_TYPE="Beta"
 	export OF_MAINTAINER="C F K O D @ X D A"
-	export OF_MAINTAINER_AVATAR="$PWD/device/motorola/kyoto/recovery/root/FFiles/maintainer.png"
 
 	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400
