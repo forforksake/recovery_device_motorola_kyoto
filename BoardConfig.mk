@@ -65,8 +65,8 @@ BOARD_USES_RECOVERY_AS_BOOT := true
 
 # kernel / mkbootimg args
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb/mt6853.dtb
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_BOOT_HEADER_VERSION := 2
@@ -128,7 +128,7 @@ TARGET_COPY_OUT_PRODUCT := product
 #Android Verified Bootvx
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
-BOARD_AVB_VBMETA_SYSTEM := system system_ext productd
+BOARD_AVB_VBMETA_SYSTEM := system system_ext product
 BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
@@ -159,19 +159,6 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 # Touchscreen Modules
 TW_LOAD_VENDOR_MODULES := "focaltech_mtk_mmi.ko mtk_tpd_mmi.ko sensors_class.ko"
 
-TW_RECOVERY_ADDITIONAL_RELINK_VENDOR_HW_BINARY_FILES += \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.gatekeeper@1.0-service \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
-
-#Libs from System & Vendor related to the Binaries  above3
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/libkeymaster41.so  \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/libpuresoftkeymasterdevice.so \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw/kmsetkey.trustonic.so \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw/libMcGatekeeper.so \
-    $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw/libSoftGatekeeper.so
-
 #Recovery Mode is selected from bootloader
 TW_NO_REBOOT_RECOVERY := true
 TW_NO_LEGACY_PROPS := true
@@ -183,14 +170,19 @@ RECOVERY_SDCARD_ON_DATA := true
 TW_USES_VENDOR_LIBS := true
 PRODUCT_ENFORCE_VINTF_MANIFEST := true
 PRODUCT_FULL_TREBLE := true
-
 TW_INCLUDE_REPACKTOOLS := true
-TW_INCLUDE_LIBRESETPROP := true
 TW_INCLUDE_RESETPROP = true
 
 # logd
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 
-#Build Debug
+# Build Debug
 BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
+# PBRP
+PB_DISABLE_DEFAULT_DM_VERITY := true
+PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/mode:Torch"
+PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/torch_brightness:12"
+PB_TORCH_MAX_BRIGHTNESS := 31

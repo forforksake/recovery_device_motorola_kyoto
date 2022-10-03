@@ -1,0 +1,3 @@
+/vendor/lib/modules/sensors_class.ko:
+/vendor/lib/modules/focaltech_mtk_mmi.ko: /vendor/lib/modules/mtk_tpd_mmi.ko /vendor/lib/modules/sensors_class.ko
+/vendor/lib/modules/mtk_tpd_mmi.ko:

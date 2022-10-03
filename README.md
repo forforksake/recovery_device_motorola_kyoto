@@ -1,4 +1,6 @@
-### Moto Edge 20 Lite 5G - Recovery Tree
+#### FuCrypto ll Userdata Decryption - Android 12
+
+### Moto Edge 20 Lite 5G - OrangeFox Recovery Tree
 ![Moto](https://motorolauk.vtexassets.com/arquivos/motorola-edge-20-lite-lockup-ffffff.svg)
 
 | **Prop** | **spec** |
@@ -11,3 +13,7 @@
 | `GPU` | **Mali-G57 MC3** |
 | `RAM` | **8GB** |
 
+#### not working
+- [ ] flashlight
+
+ForForkSake - CFKod @ XDA

@@ -1,45 +1,37 @@
 on init
     # Create the mountpoint for mnt/vendor partitions
     mkdir /mnt/vendor/persist 0771 root root
-    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
-    mkdir /data/misc 0771 root root
-    restorecon_recursive /data/misc
-    mkdir /data/misc/keystore 0771 root root
-    restorecon_recursive /data/misc/keystore
-    mkdir /data/misc/gatekeeper 0771 system system
-    restorecon_recursive /data/misc/gatekeeper
-    chown system system /system/etc
-    chmod 0666 /system/etc
-    symlink /system/etc /etc
-    mkdir /mnt/vendor/protect_f 0770 root root
-    mkdir /mnt/vendor/protect_s 0770 root root
+    mount ext4 /dev/block/platform/bootdevice/by-name/persist /mnt/vendor/persist rw
+    mkdir /mnt/vendor/tzapp 0771 root root
+    mount ext4 /dev/block/platform/bootdevice/by-name/tzapp_a /mnt/vendor/tzapp rw
+    mkdir /mnt/vendor/protect_f 0771 root root
+    mkdir /mnt/vendor/protect_s 0771 root root
     mkdir /mnt/vendor/nvcfg 0771 root root
     mkdir /mnt/vendor/nvdata 0771 root root
 
 on post-fs    
     chown system system /mnt/vendor/protect_f
-    chmod 0770 /mnt/vendor/protect_f
     restorecon /mnt/vendor/protect_f
     mount ext4 /dev/block/by-name/protect_f /mnt/vendor/protect_f rw
 
     chown system system /mnt/vendor/protect_s
-    chmod 0770 /mnt/vendor/protect_s
     restorecon /mnt/vendor/protect_s
     mount ext4 /dev/block/by-name/protect_s /mnt/vendor/protect_s rw
 
     chown system system /mnt/vendor/nvcfg
-    chmod 0771 /mnt/vendor/nvcfg
     restorecon /mnt/vendor/nvcfg
     mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg rw
-    restorecon_recursive /mnt/vendor/nvcfg
 
     chown system system /mnt/vendor/persist
     #We restorecon /mnt/vendor/persist to set SEPolicy label.
     restorecon /mnt/vendor/persist
 
-    mkdir /mnt/vendor/persist/rpmb
-    chown system system /mnt/vendor/persist/rpmb
-    chmod 0771 /mnt/vendor/persist/rpmb
+    chown system system /mnt/vendor/tzapp
+    restorecon /mnt/vendor/tzapp
+    mkdir /mnt/vendor/tzapp/TbStorage 0771 system system
+    restorecon_recursive /mnt/vendor/tzapp
+
+    mkdir /mnt/vendor/persist/rpmb 0771 system system
     restorecon_recursive /mnt/vendor/persist/rpmb
 
     # Set other rpmb
@@ -53,9 +45,8 @@ on post-fs
     restorecon_recursive /vendor/persist
 
     chown root system /mnt/vendor/nvdata
-    chmod 0771 /mnt/vendor/nvdata
-    restorecon /mnt/vendor/nvdata
     mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw
+    restorecon /mnt/vendor/nvdata
     mkdir /mnt/vendor/nvdata/media 0771 media audio
     restorecon_recursive /mnt/vendor/nvdata
 

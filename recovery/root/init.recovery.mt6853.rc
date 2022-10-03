@@ -9,7 +9,20 @@ on init
 on fs
     setprop crypto.ready 1
 
-service boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
+service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
+    class hal
+    user system
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service wait_for_keymaster /system/bin/wait_for_keymaster
+    user root
+    group root system
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service vendor.boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
     interface android.hardware.boot@1.0::IBootControl default
     interface android.hardware.boot@1.1::IBootControl default
     interface android.hardware.boot@1.2::IBootControl default
@@ -19,7 +32,15 @@ service boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service keymaster-4-1-trustonic /vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
+service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+    class hal
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    seclabel u:r:recovery:s0
+
+service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-service.trustonic
     interface android.hardware.keymaster@4.0::IKeymasterDevice default
     interface android.hardware.keymaster@4.1::IKeymasterDevice default
     user root
@@ -27,17 +48,13 @@ service keymaster-4-1-trustonic /vendor/bin/hw/android.hardware.keymaster@4.1-se
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
-    interface android.hardware.gatekeeper@1.0::IGatekeeper default
-    user root
-    group root
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
-    seclabel u:r:recovery:s0
+on post-fs
+    start mtk.plpath.utils.link
 
-service keystore2 /system/bin/keystore2 /data/misc/keystore
-    class early_hal
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    class main
     user root
-    group root readproc log
+    group root system
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw:/sbin
     seclabel u:r:recovery:s0
 
@@ -74,7 +91,6 @@ on post-fs
     symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
 
-
 on post-fs-data
     chown system system /data
     chmod 0771 /data
@@ -92,6 +108,8 @@ on property:hwservicemanager.ready=true && property:crypto.ready=1
     start mobicore
     start gatekeeper-1-0
     start keymaster-4-1-trustonic
+    start keymaster_attestation-1-1
+    start wait_for_keymaster
 
 on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
     setprop crypto.ready 0
@@ -102,11 +120,13 @@ on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
 # health hal and final chance to load touchscreen drivers
 on boot
     start health-hal-2-1
-    start boot-hal-1-2
+    start vendor.boot-hal-1-2
     insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
     insmod /vendor/lib/modules/mtk_tpd_mmi.ko
     insmod /vendor/lib/modules/sensors_class.ko
 
       # Access permission for led torch
-	chown system system /sys/class/flashlight_core/flashlight/flashlight_strobe
-    chmod 0646 /sys/class/flashlight_core/flashlight/flashlight_strobe
+	chown system system /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/mode
+    chmod 0664 /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/mode
+    chown system system /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/torch_brightness
+    chmod 0664 /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/torch_brightness

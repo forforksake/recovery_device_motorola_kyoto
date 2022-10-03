@@ -39,15 +39,17 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export LC_ALL="C"
 	export ALLOW_MISSING_DEPENDENCIES=true
 
+	#reduce ofox size
+	export FOX_DRASTIC_SIZE_REDUCTION=1
+	export FOX_EXTREME_SIZE_REDUCTION=0
+	export FOX_REMOVE_AAPT=1
+
 	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 
-	# Magisk Canary
-	export FOX_USE_SPECIFIC_MAGISK_ZIP="$PWD/device/magisk.zip"
-
 	# flashlight
 	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/sys/class/leds/mt6360_pmu_led3"
+	export OF_FL_PATH1="/sys/class/flashlight_core/flashlight"
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
@@ -55,8 +57,8 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export OF_PATCH_AVB20=1
 
 	# AB
-    export OF_AB_DEVICE=1
-	export OF_USE_TWRP_SAR_DETECT
+	export OF_AB_DEVICE=1
+	export OF_USE_TWRP_SAR_DETECT=1
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
