@@ -65,8 +65,9 @@ BOARD_USES_RECOVERY_AS_BOOT := true
 
 # kernel / mkbootimg args
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb/mt6853.dtb
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
+LZMA_RAMDISK_TARGETS := recovery
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_BOOT_HEADER_VERSION := 2
@@ -181,8 +182,3 @@ TARGET_USES_LOGD := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
-# PBRP
-PB_DISABLE_DEFAULT_DM_VERITY := true
-PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/mode:Torch"
-PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/torch_brightness:12"
-PB_TORCH_MAX_BRIGHTNESS := 31
