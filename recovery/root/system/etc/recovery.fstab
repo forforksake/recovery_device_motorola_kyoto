@@ -1,4 +1,4 @@
-# 151 "vendor/mediatek/proprietary/hardware/fstab/mt6853/fstab.in.mt6853"
+#"vendor/mediatek/proprietary/hardware/fstab/mt6853/fstab.in.mt6853"
 system                                                /system ext4 ro wait,slotselect,avb=vbmeta_system,logical,first_stage_mount,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey
 system_ext                                            /system_ext ext4 ro wait,slotselect,avb=vbmeta_system,logical,first_stage_mount
 vendor                                                /vendor ext4 ro wait,slotselect,avb,logical,first_stage_mount
@@ -6,5 +6,6 @@ product                                               /product ext4 ro wait,slot
 
 /dev/block/platform/bootdevice/by-name/metadata       /metadata ext4 noatime,nosuid,nodev,discard wait,check,formattable,first_stage_mount
 /dev/block/platform/bootdevice/by-name/userdata       /data f2fs noatime,nosuid,nodev,discard,noflush_merge,fsync_mode=nobarrier,reserve_root=134217,resgid=1065,inlinecrypt wait,check,formattable,quota,latemount,reservedsize=128m,checkpoint=fs,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,fsverity
+
 /dev/block/platform/bootdevice/by-name/misc           /misc emmc defaults defaults
 

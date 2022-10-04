@@ -40,16 +40,14 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export ALLOW_MISSING_DEPENDENCIES=true
 
 	#reduce ofox size
-	export FOX_DRASTIC_SIZE_REDUCTION=1
-	export FOX_EXTREME_SIZE_REDUCTION=0
 	export FOX_REMOVE_AAPT=1
+	export FOX_REMOVE_BUSYBOX_BINARY=1
 
 	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 
-	# flashlight
-	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/sys/class/flashlight_core/flashlight"
+	# flashlight not working
+	export OF_FLASHLIGHT_ENABLE=0
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
@@ -79,9 +77,10 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_DELETE_AROMAFM=1
 
 	# R11.1 Version and Maintainer
-	export FOX_VERSION=$(date +%d.%m.%y)
-	export FOX_BUILD_TYPE="Beta"
-	export OF_MAINTAINER="C F K O D @ X D A"
+	export FOX_VERSION="R11.1"
+	export FOX_VARIANT="A12.1"
+	export FOX_BUILD_TYPE="beta"
+	export OF_MAINTAINER="@CardiffIan CFkod@xda"
 
 	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400

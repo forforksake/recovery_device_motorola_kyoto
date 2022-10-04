@@ -60,15 +60,15 @@ TARGET_BOARD_PLATFORM_GPU := mali-g57mc3
 
 # A/B
 AB_OTA_UPDATER := true
+ENABLE_VIRTUAL_AB := true
 TARGET_NO_RECOVERY := true
 BOARD_USES_RECOVERY_AS_BOOT := true
 
 # kernel / mkbootimg args
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb/mt6853.dtb
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_BOOT_HEADER_VERSION := 2
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
@@ -137,7 +137,7 @@ BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
 # Crypto
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
-PLATFORM_VERSION := 16.1.0
+PLATFORM_VERSION := 20.1.0
 BOARD_USES_METADATA_PARTITION := true
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
@@ -159,8 +159,8 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 # Touchscreen Modules
 TW_LOAD_VENDOR_MODULES := "focaltech_mtk_mmi.ko mtk_tpd_mmi.ko sensors_class.ko"
 
-#Recovery Mode is selected from bootloader
-TW_NO_REBOOT_RECOVERY := true
+#Recovery Mode is selected from bootloader - reboot recovery does now work
+#TW_NO_REBOOT_RECOVERY := true
 TW_NO_LEGACY_PROPS := true
 TW_NO_BIND_SYSTEM := true
 TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
@@ -181,8 +181,3 @@ TARGET_USES_LOGD := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
-# PBRP
-PB_DISABLE_DEFAULT_DM_VERITY := true
-PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/mode:Torch"
-PB_TORCH_PATH := "/sys/class/flashlight/mt-flash-led1/torch_brightness:12"
-PB_TORCH_MAX_BRIGHTNESS := 31

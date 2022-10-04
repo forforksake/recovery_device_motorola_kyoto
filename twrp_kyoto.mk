@@ -17,12 +17,17 @@
 # Release name
 PRODUCT_RELEASE_NAME := kyoto
 
-# Inherit from common AOSP configmke2fs.conf
+# Inherit from common AOSP
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 
-# Inherit some common TWRP stuff.
+# Inherit GSI Keys
+$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
+
+# Inherit Virtual A/B
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+
+# Inherit from vendor/twrp
 $(call inherit-product, vendor/twrp/config/common.mk)
 
 # Inherit device configuration

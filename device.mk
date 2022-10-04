@@ -1,4 +1,5 @@
-#
+
+	#
 # Copyright (C) 2020 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,30 +22,9 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 AB_OTA_UPDATER := true
 
 AB_OTA_PARTITIONS += \
-	audio_dsp \
-	system \
-	bootloader \
-	boot \
-	cam_vpu1 \
-	cam_vpu2 \
-	cam_vpu3 \
-	dpm \
-	dtbo \
-	gz \
-	lk \
-	logo \
-	mcupm \
-	md1img \
-	md1img2 \
-	pi_img \
-	scp \
-	spmfw \
-	sspm \
-	tee \
-	tzapp \
-	vbmeta \
-	vbmeta_system \
-	vendor_boot	
+    boot \
+    system \
+    vendor
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 30

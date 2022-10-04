@@ -92,16 +92,6 @@ on post-fs
     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
 
 on post-fs-data
-    chown system system /data
-    chmod 0771 /data
-    restorecon /data
-    mkdir /data/vendor 0771 root root encryption=Require
-    mkdir /data/vendor_ce 0771 root root encryption=None
-    mkdir /data/vendor_de 0771 root root encryption=None
-    # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
-    # Key Installation
-    mkdir /data/vendor/key_provisioning 0771 system system
-    installkey /data
     install_keyring
 
 on property:hwservicemanager.ready=true && property:crypto.ready=1
@@ -124,9 +114,3 @@ on boot
     insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
     insmod /vendor/lib/modules/mtk_tpd_mmi.ko
     insmod /vendor/lib/modules/sensors_class.ko
-
-      # Access permission for led torch
-	chown system system /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/mode
-    chmod 0664 /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/mode
-    chown system system /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/torch_brightness
-    chmod 0664 /sys/devices/platform/11d00000.i2c5/i2c-5/5-0034/mt6360_pmu_fled.3.auto/mt6360_pmu_fled.0/rt-flash-led.0/flashlight/mt-flash-led1/torch_brightness

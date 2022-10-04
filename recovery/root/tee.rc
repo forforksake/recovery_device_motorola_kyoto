@@ -1,15 +1,13 @@
 on init
     # Create the mountpoint for mnt/vendor partitions
     mkdir /mnt/vendor/persist 0771 root root
-    mount ext4 /dev/block/platform/bootdevice/by-name/persist /mnt/vendor/persist rw
     mkdir /mnt/vendor/tzapp 0771 root root
-    mount ext4 /dev/block/platform/bootdevice/by-name/tzapp_a /mnt/vendor/tzapp rw
-    mkdir /mnt/vendor/protect_f 0771 root root
-    mkdir /mnt/vendor/protect_s 0771 root root
+    mkdir /mnt/vendor/protect_f 0770 root root
+    mkdir /mnt/vendor/protect_s 0770 root root
     mkdir /mnt/vendor/nvcfg 0771 root root
     mkdir /mnt/vendor/nvdata 0771 root root
 
-on post-fs    
+on post-fs
     chown system system /mnt/vendor/protect_f
     restorecon /mnt/vendor/protect_f
     mount ext4 /dev/block/by-name/protect_f /mnt/vendor/protect_f rw
@@ -21,43 +19,48 @@ on post-fs
     chown system system /mnt/vendor/nvcfg
     restorecon /mnt/vendor/nvcfg
     mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg rw
+    restorecon_recursive /mnt/vendor/nvcfg
+
+    chown root system /mnt/vendor/nvdata
+    restorecon /mnt/vendor/nvdata
+    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw
+    mkdir /mnt/vendor/nvdata/media 0771 media audio
+    restorecon_recursive /mnt/vendor/nvdata
+
+    chown system system /mnt/vendor/tzapp
+    restorecon /mnt/vendor/tzapp
+    mount ext4 /dev/block/by-name/tzapp_a /mnt/vendor/tzapp rw
+    mkdir /mnt/vendor/tzapp/TbStorage 0771 system system
+    restorecon_recursive /mnt/vendor/tzapp
 
     chown system system /mnt/vendor/persist
     #We restorecon /mnt/vendor/persist to set SEPolicy label.
     restorecon /mnt/vendor/persist
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
 
-    chown system system /mnt/vendor/tzapp
-    restorecon /mnt/vendor/tzapp
-    mkdir /mnt/vendor/tzapp/TbStorage 0771 system system
-    restorecon_recursive /mnt/vendor/tzapp
-
-    mkdir /mnt/vendor/persist/rpmb 0771 system system
+    mkdir /mnt/vendor/persist/rpmb 0771 root root
+    chown system system /mnt/vendor/persist/rpmb
     restorecon_recursive /mnt/vendor/persist/rpmb
 
-    # Set other rpmb
-    mkdir /persist/rpmb
-    mkdir /vendor/persist/rpmb
-    chmod 0771 /persist/rpmb
-    chmod 0771 /vendor/persist/rpmb
-    chown system system /persist/rpmb
-    chown system system /vendor/persist/rpmb
-    restorecon_recursive /persist
-    restorecon_recursive /vendor/persist
-
-    chown root system /mnt/vendor/nvdata
-    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw
-    restorecon /mnt/vendor/nvdata
-    mkdir /mnt/vendor/nvdata/media 0771 media audio
-    restorecon_recursive /mnt/vendor/nvdata
-
     # Create mcRegistry to store failure record
-    mkdir /mnt/vendor/persist/mcRegistry 0771 system system
+    mkdir /mnt/vendor/persist/mcRegistry 0771 root root
+    chown system system /mnt/vendor/persist/mcRegistry
 
     # Override the mobicore token path and rebel it with proper contexts
     mkdir /mnt/vendor/persist/mobicore 0770 system system
     restorecon /mnt/vendor/persist/mobicore
     write /proc/bootprof "MOBICORE: Starting mcDriverDaemon"
     start mobicore
+
+on property:sys.boot_completed=*
+    # Override the mobicore token path and rebel it with proper contexts
+    mkdir /mnt/vendor/persist/mobicore 0770 system system
+    restorecon /mnt/vendor/persist/mobicore
+
+on post-fs-data
+    # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
+    # Key Installation
+    mkdir /data/vendor/key_provisioning 0771 system system
 
 # For META/FACTORY mode
 on property:ro.crypto.state=unencrypted
