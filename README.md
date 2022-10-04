@@ -1,4 +1,4 @@
-#### FuCrypto ll Userdata Decryption - Android 12
+#### Full Userdata Decryption - Android 12
 
 ### Moto Edge 20 Lite 5G - OrangeFox Recovery Tree
 ![Moto](https://motorolauk.vtexassets.com/arquivos/motorola-edge-20-lite-lockup-ffffff.svg)
