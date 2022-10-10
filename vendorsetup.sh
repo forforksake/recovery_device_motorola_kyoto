@@ -43,6 +43,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_DRASTIC_SIZE_REDUCTION=0
 	export FOX_EXTREME_SIZE_REDUCTION=0
 	export FOX_REMOVE_AAPT=1
+	export FOX_REMOVE_BUSYBOX_BINARY=1
 	export FOX_USE_LZMA_COMPRESSION=0
 
 	#Zip install fix - Non standard Boot Location
@@ -62,6 +63,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
+	export OF_VANILLA_BUILD=1
 
 	#Metadata restore resolves alot of bootloops
 	export OF_QUICK_BACKUP_LIST="/boot;/metadata;"
@@ -81,7 +83,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	# R11.1 Version and Maintainer
 	export FOX_VERSION="R11.1"
 	export FOX_VARIANT="A12.1"
-	export FOX_BUILD_TYPE="Beta"
+	export FOX_BUILD_TYPE="beta"
 	export OF_MAINTAINER="C F K O D @ X D A"
 
 	# Screen Notch and status bar settings
