@@ -31,7 +31,6 @@ service mobicore /vendor/bin/mcDriverDaemon --sfs-reformat --P1 /mnt/vendor/pers
 	-r /vendor/app/mcRegistry/5020170115e016302017012521300000.drbin
     user root
     group root
-    disabled
     seclabel u:r:recovery:s0
 
 # t-Drv naming

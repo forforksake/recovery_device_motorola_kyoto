@@ -25,7 +25,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 # Inherit Virtual A/B
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+ENABLE_VIRTUAL_AB := true
+$(call inherit-product, build/make/target/product/virtual_ab_ota.mk)
 
 # Inherit from vendor/twrp
 $(call inherit-product, vendor/twrp/config/common.mk)

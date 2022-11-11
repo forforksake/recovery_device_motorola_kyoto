@@ -48,6 +48,12 @@ service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-servi
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
+service keystore2 /system/bin/keystore2 /data/misc/keystore
+    user root
+    group root drmrpc readproc log
+    disabled
+    seclabel u:r:recovery:s0
+
 on post-fs
     start mtk.plpath.utils.link
 
@@ -92,10 +98,36 @@ on post-fs
     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
 
 on post-fs-data
+    chown system system /data
+    chmod 0771 /data
+    restorecon /data
+    mkdir /data/vendor 0771 root root encryption=Require
+    mkdir /data/vendor_ce 0771 root root encryption=None
+    mkdir /data/vendor_de 0771 root root encryption=None
+    # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
+    # Key Installation
+    mkdir /data/vendor/key_provisioning 0771 system system
+    installkey /data
     install_keyring
+
+on post-fs
+    chown system system /mnt/vendor/tzapp
+    chmod 0770 /mnt/vendor/tzapp
+    restorecon /mnt/vendor/tzapp
+
+service trustlet_backup /vendor/bin/init.mmi.backup.trustlet.sh
+    class main
+    user system
+    group system
+    oneshot
+    disabled
+
+on property:sys.boot_completed=1
+    start trustlet_backup
 
 on property:hwservicemanager.ready=true && property:crypto.ready=1
     start mobicore
+    start keystore2
     start gatekeeper-1-0
     start keymaster-4-1-trustonic
     start keymaster_attestation-1-1
@@ -111,6 +143,3 @@ on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
 on boot
     start health-hal-2-1
     start vendor.boot-hal-1-2
-    insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
-    insmod /vendor/lib/modules/mtk_tpd_mmi.ko
-    insmod /vendor/lib/modules/sensors_class.ko

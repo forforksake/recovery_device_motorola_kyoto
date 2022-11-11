@@ -6,6 +6,8 @@ on init
     mkdir /mnt/vendor/protect_s 0770 root root
     mkdir /mnt/vendor/nvcfg 0771 root root
     mkdir /mnt/vendor/nvdata 0771 root root
+    mkdir /dev/mobicore 0700 root root
+    mkdir /dev/mobicore-user 0777 root root
 
 on post-fs
     chown system system /mnt/vendor/protect_f
@@ -26,6 +28,11 @@ on post-fs
     mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw
     mkdir /mnt/vendor/nvdata/media 0771 media audio
     restorecon_recursive /mnt/vendor/nvdata
+
+    chown system system /dev/mobicore
+    restorecon /dev/mobicore
+    chown system system /dev/mobicore-user
+    restorecon /dev/mobicore-user
 
     chown system system /mnt/vendor/tzapp
     restorecon /mnt/vendor/tzapp
