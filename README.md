@@ -1,4 +1,4 @@
-#### Full Userdata Decryption - Android 12
+#### Full Userdata Decryption - Android 12+
 
 ### Moto Edge 20 Lite 5G - OrangeFox Recovery Tree
 ![Moto](https://motorolauk.vtexassets.com/arquivos/motorola-edge-20-lite-lockup-ffffff.svg)
@@ -13,5 +13,10 @@
 | `GPU` | **Mali-G57 MC3** |
 | `RAM` | **8GB** |
 
+[Firmware](https://t.me/s/motoupdatestracker?q=kyoto)
+
 C F K o d @ X D A
 [XDA Thread](https://forum.xda-developers.com/t/recovery-12-unofficial-orangefox-11-1_1-beta.4501283/)
+
+@Cardiffian
+[Telegram](https://t.me/cardiffian)

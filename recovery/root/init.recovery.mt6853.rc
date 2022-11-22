@@ -22,16 +22,6 @@ service wait_for_keymaster /system/bin/wait_for_keymaster
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service vendor.boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
-    interface android.hardware.boot@1.0::IBootControl default
-    interface android.hardware.boot@1.1::IBootControl default
-    interface android.hardware.boot@1.2::IBootControl default
-    class early_hal
-    user root
-    group root
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
-    seclabel u:r:recovery:s0
-
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
     class hal
@@ -48,10 +38,10 @@ service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-servi
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service keystore2 /system/bin/keystore2 /data/misc/keystore
-    user root
-    group root drmrpc readproc log
-    disabled
+service keystore_auth /system/bin/keystore_auth
+    user system
+    group root
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
     seclabel u:r:recovery:s0
 
 on post-fs
