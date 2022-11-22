@@ -59,11 +59,6 @@ on post-fs
     write /proc/bootprof "MOBICORE: Starting mcDriverDaemon"
     start mobicore
 
-on property:sys.boot_completed=*
-    # Override the mobicore token path and rebel it with proper contexts
-    mkdir /mnt/vendor/persist/mobicore 0770 system system
-    restorecon /mnt/vendor/persist/mobicore
-
 on post-fs-data
     # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
     # Key Installation

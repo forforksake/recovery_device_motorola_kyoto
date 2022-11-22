@@ -60,7 +60,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
-	export OF_VANILLA_BUILD=1
+	export OF_VANILLA_BUILD=0
 
 	#Metadata restore resolves alot of bootloops
 	export OF_QUICK_BACKUP_LIST="/boot;/metadata;"
