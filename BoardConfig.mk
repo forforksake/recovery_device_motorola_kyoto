@@ -124,7 +124,7 @@ TARGET_COPY_OUT_VENDOR := vendor
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_COPY_OUT_PRODUCT := product
 
-#Android Verified Bootvx
+#Android Verified Boot
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 BOARD_AVB_VBMETA_SYSTEM := system system_ext product
@@ -161,8 +161,6 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 # Touchscreen Modules
 TW_LOAD_VENDOR_MODULES := "focaltech_mtk_mmi.ko mtk_tpd_mmi.ko sensors_class.ko"
 
-#Recovery Mode is selected from bootloader - reboot recovery does now work
-#TW_NO_REBOOT_RECOVERY := true
 TW_NO_LEGACY_PROPS := true
 TW_NO_BIND_SYSTEM := true
 TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
