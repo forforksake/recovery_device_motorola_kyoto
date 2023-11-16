@@ -55,7 +55,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export OF_PATCH_AVB20=1
 
 	# AB and VARs reccomended by ofox devs
-	export OF_AB_DEVICE=1
+	export FOX_AB_DEVICE=1
 	export OF_USE_TWRP_SAR_DETECT=1
 	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
@@ -77,9 +77,6 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_ENABLE_APP_MANAGER=1
 	export FOX_DELETE_AROMAFM=1
 
-	# R11.1 Version and Maintainer
-	export FOX_VERSION="R11.1"
-	export FOX_VARIANT="A12.1"
 	export FOX_BUILD_TYPE="beta"
 	export OF_MAINTAINER="@CardiffIan CFkod@xda"
 
