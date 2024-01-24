@@ -77,9 +77,13 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_ENABLE_APP_MANAGER=1
 	export FOX_DELETE_AROMAFM=1
 
-	export FOX_BUILD_TYPE="beta"
-	export OF_MAINTAINER="@CardiffIan CFkod@xda"
+	# magisk canary 26404
+  	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk26404.zip"
 
+	export FOX_BUILD_TYPE="beta"
+	export OF_MAINTAINER="ForForkSake CFkod@xda"
+	export OF_MAINTAINER_AVATAR="/home/ffs/fox_12.1/avatar.png"
+ 
 	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400
 	export OF_STATUS_H=90

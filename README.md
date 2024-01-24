@@ -1,8 +1,6 @@
-#### Full Userdata Decryption - Android 12+
+#### Full Userdata Decryption [Pin/Password/Pattern] - Android 12+
 
-6th November 2023 - 9 months after smashing screen - I have a new kyoto device enroute and some exciting updates will certainly follow
-
-### Moto Edge 20 Lite 5G - OrangeFox Recovery Tree
+### Moto Edge 20 Lite 5G (aka edge 20 fusion) - OrangeFox Recovery Tree
 ![Moto](https://motorolauk.vtexassets.com/arquivos/motorola-edge-20-lite-lockup-ffffff.svg)
 
 | **Prop** | **spec** |
