@@ -78,7 +78,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_DELETE_AROMAFM=1
 
 	# magisk canary 26404
-  	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk26404.zip"
+  	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk27002.zip"
 
 	export FOX_BUILD_TYPE="beta"
 	export OF_MAINTAINER="ForForkSake CFkod@xda"
