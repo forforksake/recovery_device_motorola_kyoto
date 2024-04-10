@@ -15,7 +15,6 @@
 
 [Firmware](https://t.me/s/motoupdatestracker?q=kyoto)
 
-C F K o d @ X D A
 [XDA Thread](https://forum.xda-developers.com/t/recovery-12-unofficial-orangefox-11-1_1-beta.4501283/)
 
 @Cardiffian

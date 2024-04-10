@@ -46,18 +46,17 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 
-	# flashlight not working
-	export OF_FLASHLIGHT_ENABLE=0
+	# flashlight - attempt at resolving
+	#export OF_FLASHLIGHT_ENABLE=0
+	export OF_FL_PATH1="/system/flashlight"
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
 	export OF_PATCH_VBMETA_FLAG=0
-	export OF_PATCH_AVB20=1
+	export OF_DEFAULT_KEYMASTER_VERSION=4.1
 
 	# AB and VARs reccomended by ofox devs
 	export FOX_AB_DEVICE=1
-	export OF_USE_TWRP_SAR_DETECT=1
-	export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export OF_NO_MIUI_PATCH_WARNING=1
 	export OF_VANILLA_BUILD=0
@@ -77,12 +76,13 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_ENABLE_APP_MANAGER=1
 	export FOX_DELETE_AROMAFM=1
 
-	# magisk canary 26404
-  	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk26404.zip"
 
-	export FOX_BUILD_TYPE="beta"
-	export OF_MAINTAINER="ForForkSake CFkod@xda"
-	export OF_MAINTAINER_AVATAR="/home/ffs/fox_12.1/avatar.png"
+	# magisk 2.7
+	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk27000.zip"
+
+	export FOX_VERSION="R11.1_A12.1_v8"
+	export OF_MAINTAINER="ForForkSake"
+	export OF_MAINTAINER_AVATAR="/home/ffs/fox_12.1/maintainer.png"
  
 	# Screen Notch and status bar settings
 	export OF_SCREEN_H=2400

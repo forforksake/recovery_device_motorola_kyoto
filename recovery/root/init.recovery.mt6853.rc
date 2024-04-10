@@ -6,24 +6,15 @@ on init
     symlink /dev/block/platform/bootdevice /dev/block/bootdevice
     export LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64:/system/lib64/hw:/sbin
 
-on fs
-    setprop crypto.ready 1
-
-service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
+service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
     class hal
-    user system
+    user root
     group root
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
-service wait_for_keymaster /system/bin/wait_for_keymaster
-    user root
-    group root system
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
-    seclabel u:r:recovery:s0
-
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
-    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+service tee-1-1 /vendor/bin/hw/vendor.trustonic.tee@1.1-service
     class hal
     user root
     group root
@@ -87,23 +78,25 @@ on post-fs
     symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
 
-on post-fs-data
     chown system system /data
     chmod 0771 /data
-    restorecon /data
-    mkdir /data/vendor 0771 root root encryption=Require
-    mkdir /data/vendor_ce 0771 root root encryption=None
-    mkdir /data/vendor_de 0771 root root encryption=None
+    restorecon_recursive /data
+    mkdir /data/vendor 0771 system system encryption=Require
+    mkdir /data/vendor_ce 0771 system system encryption=None
+    mkdir /data/vendor_de 0771 system system encryption=None
+    mkdir /data/misc 0771 system system encryption=None
+    restorecon_recursive /data/misc
     # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
     # Key Installation
     mkdir /data/vendor/key_provisioning 0771 system system
     installkey /data
-    install_keyring
 
-on post-fs
-    chown system system /mnt/vendor/tzapp
-    chmod 0770 /mnt/vendor/tzapp
-    restorecon /mnt/vendor/tzapp
+    #Flashlight
+    chmod 0660 /sys/class/flashlight/mt-flash-led1/torch_brightness
+    chown system system /sys/class/flashlight/mt-flash-led1/torch_brightness
+    chmod 0660 /sys/class/flashlight/mt-flash-led1/mode
+    chown system system /sys/class/flashlight/mt-flash-led1/mode
+    write /sys/class/flashlight/mt-flash-led1/torch_brightness "Torch"
 
 service trustlet_backup /vendor/bin/init.mmi.backup.trustlet.sh
     class main
@@ -115,15 +108,30 @@ service trustlet_backup /vendor/bin/init.mmi.backup.trustlet.sh
 on property:sys.boot_completed=1
     start trustlet_backup
 
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+    setprop crypto.ready 1
+
 on property:hwservicemanager.ready=true && property:crypto.ready=1
     start mobicore
     start keystore2
     start gatekeeper-1-0
     start keymaster-4-1-trustonic
-    start keymaster_attestation-1-1
-    start wait_for_keymaster
+    start tee-1-1
 
-on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
+on property:twrp.all.users.decrypted=true
+    setprop crypto.ready 0
+    stop mobicore
+    stop gatekeeper-1-0
+    stop keymaster-4-1-trustonic
+
+on property:ro.crypto.state=unsupported
+    setprop crypto.ready 0
+    stop mobicore
+    stop gatekeeper-1-0
+    stop keymaster-4-1-trustonic
+
+on property:ro.crypto.state=unencrypted
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0

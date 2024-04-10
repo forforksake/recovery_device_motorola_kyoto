@@ -145,7 +145,7 @@ TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
 
 # TWRP specific build flags
-TW_DEVICE_VERSION := CFKod@XDA beta_1
+TW_DEVICE_VERSION := ForForkSake_XDA
 TW_THEME := portrait_hdpi
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
