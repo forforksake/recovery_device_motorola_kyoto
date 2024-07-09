@@ -19,3 +19,23 @@
 
 @Cardiffian
 [Telegram](https://t.me/cardiffian)
+
+
+OrangeFox Recovery R11.1 Changelog
+-----------------------------------
+
+== R11.1 ==
+- Update the magisk addon to 2.7
+- Add Support for terminal from filemanager
+- Add file manager option to edit selected file
+- Open Magisk apk as zip
+- Implement 'twrp reboot fastboot' for fastbootd mode
+- Implement 'twrp format data' to format /data
+- Update the ZIP signature verification
+- Update the initd addon
+- Re-sign the internal zips
+- Addon to remove survival scripts
+- Flashable zip for backing up OrangeFox settings
+     (/FFiles/OF_backup_settings.zip)
+- Many UI and other fixes and enhancements
+- Work-around for MTP issues after data format

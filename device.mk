@@ -20,10 +20,20 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 # A/B support
 AB_OTA_UPDATER := true
 
+# Updated to Android 13 OTA partitions
 AB_OTA_PARTITIONS += \
     boot \
+    dtbo \
     system \
-    vendor
+    system_ext \
+    product \
+    vendor \
+    vendor_dlkm \
+    odm \
+    odm_dlkm \
+    vbmeta \
+    vbmeta_system \
+    vbmeta_vendor
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 30

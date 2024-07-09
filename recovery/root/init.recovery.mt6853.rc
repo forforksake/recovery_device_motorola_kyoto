@@ -91,13 +91,6 @@ on post-fs
     mkdir /data/vendor/key_provisioning 0771 system system
     installkey /data
 
-    #Flashlight
-    chmod 0660 /sys/class/flashlight/mt-flash-led1/torch_brightness
-    chown system system /sys/class/flashlight/mt-flash-led1/torch_brightness
-    chmod 0660 /sys/class/flashlight/mt-flash-led1/mode
-    chown system system /sys/class/flashlight/mt-flash-led1/mode
-    write /sys/class/flashlight/mt-flash-led1/torch_brightness "Torch"
-
 service trustlet_backup /vendor/bin/init.mmi.backup.trustlet.sh
     class main
     user system
@@ -124,20 +117,64 @@ on property:twrp.all.users.decrypted=true
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
+    stop tee-1-1
 
 on property:ro.crypto.state=unsupported
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
+    stop tee-1-1
 
 on property:ro.crypto.state=unencrypted
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
+    stop tee-1-1
 
-# health hal and final chance to load touchscreen drivers
+# health and boot hal
 on boot
     start health-hal-2-1
     start vendor.boot-hal-1-2
+
+    #Flashlight
+    chmod 0660 /sys/class/flashlight/mt-flash-led1/torch_brightness
+    chown system system /sys/class/flashlight/mt-flash-led1/torch_brightness
+    chmod 0660 /sys/class/flashlight/mt-flash-led1/mode
+    chown system system /sys/class/flashlight/mt-flash-led1/mode
+    write /sys/class/flashlight/mt-flash-led1/mode "Torch"
+
+
+on boot
+    start mtk.plpath.utils.link
+
+on property:persist.vendor.mtk.pl_lnk=1
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+
+# FSTAB_RAW2(lk2,bootloader2) of fstab.in.emmc, but without bootloader2 mount point
+    symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
+    symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
+
+# Fix ro.vendor.mtk_ufs_support remove issue of recovery mode
+on property:vendor.mtk.boot0_linka=1
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot0_linkb=1
+    symlink /dev/block/sdb /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot0_linkc=1
+    symlink /dev/block/sdc /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot1_linka=1
+    symlink /dev/block/sda /dev/block/mmcblk0boot1
+
+on property:vendor.mtk.boot1_linkb=1
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+
+on property:vendor.mtk.boot1_linkc=1
+    symlink /dev/block/sdc /dev/block/mmcblk0boot1
+
