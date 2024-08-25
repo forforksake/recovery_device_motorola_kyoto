@@ -8,9 +8,8 @@ on init
     mkdir /mnt/vendor/nvdata 0771 root root
     mkdir /dev/mobicore 0700 root root
     mkdir /dev/mobicore-user 0777 root root
-    restorecon_recursive /mnt/vendor
 
-on fs
+on post-fs
     chown system system /mnt/vendor/protect_f
     restorecon /mnt/vendor/protect_f
     mount ext4 /dev/block/by-name/protect_f /mnt/vendor/protect_f rw
@@ -36,14 +35,12 @@ on fs
     restorecon /dev/mobicore-user
 
     chown system system /mnt/vendor/tzapp
-    chmod 0771 /mnt/vendor/tzapp
     restorecon /mnt/vendor/tzapp
     mount ext4 /dev/block/by-name/tzapp_a /mnt/vendor/tzapp rw
     mkdir /mnt/vendor/tzapp/TbStorage 0771 system system
     restorecon_recursive /mnt/vendor/tzapp
 
     chown system system /mnt/vendor/persist
-    chmod 0771 /mnt/vendor/persist
     #We restorecon /mnt/vendor/persist to set SEPolicy label.
     restorecon /mnt/vendor/persist
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
@@ -53,12 +50,9 @@ on fs
     restorecon_recursive /mnt/vendor/persist/rpmb
 
     # Create mcRegistry to store failure record
-    mkdir /mnt/vendor/persist/mcRegistry 0771 system system
+    mkdir /mnt/vendor/persist/mcRegistry 0771 root root
     chown system system /mnt/vendor/persist/mcRegistry
-    chmod 0771 /mnt/vendor/persist/mcRegistry
 
-
-on property:sys.boot_completed=*
     # Override the mobicore token path and rebel it with proper contexts
     mkdir /mnt/vendor/persist/mobicore 0770 system system
     restorecon /mnt/vendor/persist/mobicore

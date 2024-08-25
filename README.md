@@ -7,13 +7,11 @@
 | --- | --- |
 | `Codename` | **Kyoto** |
 | `Board` | **MediaTek MT6853** |
-| `OS` | **Android 12** |
+| `OS` | **Android 12/13**|
 | `Chipset` | **Dimensity 720** |
 | `CPU` | **Octa-core (2xCortex-A76 & 6xCortex-A55 @ 2Ghz)** |
 | `GPU` | **Mali-G57 MC3** |
 | `RAM` | **8GB** |
-
-[Firmware](https://t.me/s/motoupdatestracker?q=kyoto)
 
 [XDA Thread](https://forum.xda-developers.com/t/recovery-12-unofficial-orangefox-11-1_1-beta.4501283/)
 
@@ -25,7 +23,7 @@ OrangeFox Recovery R11.1 Changelog
 -----------------------------------
 
 == R11.1 ==
-- Update the magisk addon to 2.7
+- Update the magisk addon to 27007 Canary (Required for several magisk modules)
 - Add Support for terminal from filemanager
 - Add file manager option to edit selected file
 - Open Magisk apk as zip

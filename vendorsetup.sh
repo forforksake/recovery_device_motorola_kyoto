@@ -46,9 +46,8 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	#Zip install fix - Non standard Boot Location
 	export FOX_RECOVERY_BOOT_PARTITION="/dev/block/platform/bootdevice/by-name/boot"
 
-	# flashlight - attempt at resolving
-	export OF_FLASHLIGHT_ENABLE=1
-	export OF_FL_PATH1="/system/flashlight"
+	# flashlight not working
+	export OF_FLASHLIGHT_ENABLE=0
 	export OF_USE_GREEN_LED=0
 
 	# Explicit Do Not Patch vbmeta with magisk - Fastboot flash args suffice
@@ -77,9 +76,9 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_DELETE_AROMAFM=1
 
 	# magisk 2.7
-	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk27000.zip"
+	export FOX_USE_SPECIFIC_MAGISK_ZIP="/home/ffs/fox_12.1/magisk/magisk27007.zip"
 
-	export FOX_VERSION="R11.1_A12.1_v9"
+	export FOX_VERSION="R11.1_A12.1_A13_alpha"
 	export OF_MAINTAINER="ForForkSake"
 	export OF_MAINTAINER_AVATAR="/home/ffs/fox_12.1/maintainer.png"
  

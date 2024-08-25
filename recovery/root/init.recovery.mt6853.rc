@@ -6,15 +6,11 @@ on init
     symlink /dev/block/platform/bootdevice /dev/block/bootdevice
     export LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64:/system/lib64/hw:/sbin
 
+on fs
+    setprop crypto.ready 1
+
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
-    class hal
-    user root
-    group root
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
-    seclabel u:r:recovery:s0
-
-service tee-1-1 /vendor/bin/hw/vendor.trustonic.tee@1.1-service
     class hal
     user root
     group root
@@ -110,71 +106,29 @@ on property:hwservicemanager.ready=true && property:crypto.ready=1
     start keystore2
     start gatekeeper-1-0
     start keymaster-4-1-trustonic
-    start tee-1-1
 
 on property:twrp.all.users.decrypted=true
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
-    stop tee-1-1
 
 on property:ro.crypto.state=unsupported
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
-    stop tee-1-1
 
 on property:ro.crypto.state=unencrypted
     setprop crypto.ready 0
     stop mobicore
     stop gatekeeper-1-0
     stop keymaster-4-1-trustonic
-    stop tee-1-1
 
-# health and boot hal
+# health and boot hal & Final chance to load TS drivers (Issues related to A13)
 on boot
     start health-hal-2-1
     start vendor.boot-hal-1-2
-
-    #Flashlight
-    chmod 0660 /sys/class/flashlight/mt-flash-led1/torch_brightness
-    chown system system /sys/class/flashlight/mt-flash-led1/torch_brightness
-    chmod 0660 /sys/class/flashlight/mt-flash-led1/mode
-    chown system system /sys/class/flashlight/mt-flash-led1/mode
-    write /sys/class/flashlight/mt-flash-led1/mode "Torch"
-
-
-on boot
-    start mtk.plpath.utils.link
-
-on property:persist.vendor.mtk.pl_lnk=1
-    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
-
-# FSTAB_RAW2(lk2,bootloader2) of fstab.in.emmc, but without bootloader2 mount point
-    symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
-    symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
-
-# Fix ro.vendor.mtk_ufs_support remove issue of recovery mode
-on property:vendor.mtk.boot0_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot0_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot0_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot0
-
-on property:vendor.mtk.boot1_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot1
-
-on property:vendor.mtk.boot1_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot1
-
-on property:vendor.mtk.boot1_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot1
-
+    insmod /vendor/lib/modules/focaltech_mtk_mmi.ko
+    insmod /vendor/lib/modules/mtk_tpd_mmi.ko
+    insmod /vendor/lib/modules/sensors_class.ko
